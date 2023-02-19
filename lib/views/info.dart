@@ -46,7 +46,6 @@ class _InfoState extends State<Info> {
             try {
               await launchUrl(Uri.parse(url));
             } catch (error) {
-              print(error.toString());
               showWebToast();
             }
           },

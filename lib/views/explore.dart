@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
 import '../api/book_data.dart';
 import '../api/getBooksApi.dart';
 import '../api/reserveBookApi.dart';
@@ -19,6 +17,19 @@ class Explore extends StatefulWidget {
 }
 
 class ExploreState extends State<Explore> {
+  bool _isMounted = false;
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
+  }
+
+  void myMethod() {
+    if (_isMounted) {
+      // Do something
+    }
+  }
   String token = "";
   TextEditingController searchController = new TextEditingController();
   Map dataWToken = {};
@@ -52,6 +63,7 @@ class ExploreState extends State<Explore> {
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
     try {
       setUpBooks("").then((books) {
         currentWidget = booksToExplore(
@@ -155,7 +167,7 @@ class ExploreState extends State<Explore> {
     reserveBook.reserve(dataWToken["obtainedToken"]);
   }
 
-  //showTitleToast(fullTitle) {
+  showTitleToast(fullTitle) {
   //   return Fluttertoast.showToast(
   //       msg: fullTitle,
   //       toastLength: Toast.LENGTH_SHORT,
@@ -163,5 +175,5 @@ class ExploreState extends State<Explore> {
   //       timeInSecForIosWeb: 1,
   //       backgroundColor: Colors.blue,
   //       textColor: Colors.white);
-  // }
+  }
 }
