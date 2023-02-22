@@ -11,6 +11,9 @@ class BooksApi {
   List<Book> booksFetched = [];
 
   Future<void> fetchBooks(token) async {
+    bool success = false;
+    while (!success) {
+      try {
     final responseBooks = await http.get(Uri.parse('http://10.0.2'
         '.2:8000/api/books'),
         headers: {'Authorization': "Bearer " + token});
@@ -41,7 +44,11 @@ class BooksApi {
         throw Exception('Failed to load books');
       }
     }
-  }
+    success = true;
+      } on FormatException catch (e) {
+        print("retrying..");
+      }
+  }}
 
   Future<void> fetchSearchedBooks(token) async {
     final responseBooks = await http.get(

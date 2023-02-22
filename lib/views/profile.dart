@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../api/book_data.dart';
 import '../api/get_reserved.dart';
@@ -18,6 +19,7 @@ class ProfileState extends State<Profile> {
   Map map = {};
 
   ProfileState(this.map);
+
   Color lentTextColor = Colors.black;
   Color reservedTextColor = Colors.black26;
   bool showLentBooks = true;
@@ -27,6 +29,7 @@ class ProfileState extends State<Profile> {
   Future<List<Book>>? lentBooks;
 
   Future<void> setUp(gr) async {
+    //tu je problem
     reservedBooks = Future.value(await gr.getUsersBooks("reserved"));
     lentBooks = Future.value(await gr.getUsersBooks("lended"));
   }
@@ -41,8 +44,6 @@ class ProfileState extends State<Profile> {
       });
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,179 +111,195 @@ class ProfileState extends State<Profile> {
               Padding(
                 padding: EdgeInsets.only(top: 25),
               ),
-              Column(children: [Container(
-                  child: Row(
+              Column(
+                children: [
+                  Container(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       TextButton(
-                        child: Text('Požičané',style: TextStyle
-                          (color:lentTextColor),),
-                        style:ButtonStyle(backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent)),
-                        onPressed: () {
-                          setState(() {
-                            reservedTextColor=Colors.black26;
-                            lentTextColor=Colors.black;
-                            showLentBooks=true;
-                          });
-                        },
+                        child: Text(
+                          'Požičané',
+                          style: TextStyle(color: lentTextColor),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.transparent)),
+                        onPressed: allSetUp
+                            ? () {
+                                setState(() {
+                                  reservedTextColor = Colors.black26;
+                                  lentTextColor = Colors.black;
+                                  showLentBooks = true;
+                                });
+                              }
+                            : null,
                       ),
                       SizedBox(width: 10.0),
                       TextButton(
-                        child: Text('Rezervované',style: TextStyle
-                          (color:reservedTextColor),),
-                        onPressed: () {
-                          setState(() {
-                            reservedTextColor=Colors.black;
-                            lentTextColor=Colors.black26;
-                            showLentBooks=false;
-                          });
-                        },
+                        child: Text(
+                          'Rezervované',
+                          style: TextStyle(color: reservedTextColor),
+                        ),
+                        onPressed: allSetUp
+                            ? () {
+                                setState(() {
+                                  reservedTextColor = Colors.black;
+                                  lentTextColor = Colors.black26;
+                                  showLentBooks = false;
+                                });
+                              }
+                            : null,
                       ),
                     ],
-                    mainAxisAlignment: MainAxisAlignment.center,
-                  ))],),
+                  ))
+                ],
+              ),
               FutureBuilder<List<Book>>(
-                  future: (showLentBooks)?lentBooks:reservedBooks,
+                  future: (showLentBooks) ? lentBooks : reservedBooks,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if(snapshot.data!.isEmpty){
+                      if (snapshot.data!.isEmpty) {
                         return Text("Zatiaľ nemáte žiadne rezervované knihy");
                       }
                       return SingleChildScrollView(
                           child: Container(
                               child: Column(children: [
-                        showLentBooks ? Container(child:Column(children: [
-                          Text("Požičané knihy",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 30)),
-                          ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              physics: ClampingScrollPhysics(),
-                              itemCount: snapshot.data?.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                    margin: EdgeInsets.only(left: 20, right: 20),
-                                    child: Card(
-                                        child: SizedBox(
-                                          height: 100,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                  width: 70,
-                                                  margin: EdgeInsets.all(20),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                    child: Image.network(
-                                                      "http://10.0.2.2:8000/boo"
-                                                          "ks/${snapshot.data![index].image}",
-                                                      errorBuilder: (BuildContext
-                                                      context,
-                                                          Object exception,
-                                                          StackTrace? stackTrace) {
-                                                        return const Icon(
-                                                          Icons.book,
-                                                          size: 32.0,
-                                                        );
-                                                      },
-                                                    ),
-                                                  )),
-                                              IntrinsicWidth(
-                                                child: Column(children: [
+                        showLentBooks
+                            ? Container(
+                                child: Column(
+                                children: [
+                                  Text("Požičané knihy",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 30)),
+                                  ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      physics: ClampingScrollPhysics(),
+                                      itemCount: snapshot.data?.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Container(
+                                            margin: EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            child: Card(
+                                                child: SizedBox(
+                                              height: 100,
+                                              child: Row(
+                                                children: [
                                                   Container(
-                                                      padding:
-                                                      EdgeInsets.only(top: 10),
-                                                      height: 50,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                        children: [
-                                                          // SizedBox(
-                                                          //   height:20,
-                                                          // ),
-                                                          Align(
-                                                            alignment:
-                                                            Alignment.bottomLeft,
-                                                            child: GestureDetector(
-                                                              child: Text(
-                                                                  (snapshot
-                                                                      .data![
-                                                                  index]
-                                                                      .title
-                                                                      .length >
-                                                                      15)
-                                                                      ? smallSentence(
-                                                                      snapshot
-                                                                          .data![
-                                                                      index]
-                                                                          .title)
-                                                                      : snapshot
-                                                                      .data![
-                                                                  index]
-                                                                      .title,
-                                                                  style: TextStyle(
-                                                                      fontSize: 20)),
-                                                              onTap: () {
-                                                                //showToastx
-                                                                (snapshot
-                                                                    .data![index]
-                                                                    .title);
-                                                              },
-                                                            ),
-                                                          ),
-                                                          // SizedBox(
-                                                          //   height:10,
-                                                          // ),
-                                                          SizedBox(
-                                                            width: 20,
-                                                          ),
-                                                          Align(
-                                                            alignment:
-                                                            Alignment(1.0, 0.0),
-                                                            child: Text(snapshot
-                                                                .data![index]
-                                                                .release_year),
-                                                          ),
-                                                        ],
+                                                      width: 70,
+                                                      margin:
+                                                          EdgeInsets.all(20),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                        child: Image.network(
+                                                          "http://10.0.2.2:8000/boo"
+                                                          "ks/${snapshot.data![index].image}",
+                                                          errorBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  Object
+                                                                      exception,
+                                                                  StackTrace?
+                                                                      stackTrace) {
+                                                            return const Icon(
+                                                              Icons.book,
+                                                              size: 32.0,
+                                                            );
+                                                          },
+                                                        ),
                                                       )),
-                                                ]),
-                                              ),
+                                                  IntrinsicWidth(
+                                                    child: Column(children: [
+                                                      Container(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 10),
+                                                          height: 50,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              // SizedBox(
+                                                              //   height:20,
+                                                              // ),
+                                                              Align(
+                                                                alignment: Alignment
+                                                                    .bottomLeft,
+                                                                child:
+                                                                    GestureDetector(
+                                                                  child: Text(
+                                                                      (snapshot.data![index].title.length >
+                                                                              15)
+                                                                          ? smallSentence(snapshot
+                                                                              .data![
+                                                                                  index]
+                                                                              .title)
+                                                                          : snapshot
+                                                                              .data![
+                                                                                  index]
+                                                                              .title,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              20)),
+                                                                  onTap: () {
+                                                                    showToastx(snapshot
+                                                                        .data![
+                                                                            index]
+                                                                        .title);
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              // SizedBox(
+                                                              //   height:10,
+                                                              // ),
+                                                              SizedBox(
+                                                                width: 20,
+                                                              ),
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment(
+                                                                        1.0,
+                                                                        0.0),
+                                                                child: Text(snapshot
+                                                                    .data![
+                                                                        index]
+                                                                    .release_year),
+                                                              ),
+                                                            ],
+                                                          )),
+                                                    ]),
+                                                  ),
 
-                                              // Padding(
-                                              //     padding: EdgeInsets.only(bottom: 20),
-                                              //     child: Column(
-                                              //       children: [
-                                              //         Padding(
-                                              //           padding: EdgeInsets.all(5),
-                                              //           //apply padding to all four sides
-                                              //           child: Text("Počet kusov na "
-                                              //               "sklade:${snapshot.data![index].count_available}"),
-                                              //         ),
-                                              //
-                                              //       ],
-                                              //     ))
-                                            ],
-                                          ),
-                                        )));
-                              })
-                        ],))
-                            :Container
-                          (child:Column(children:[
-                            Text("Rezervované knihy",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 30)),
-                            ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                physics: ClampingScrollPhysics(),
-                                itemCount: snapshot.data?.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                      margin: EdgeInsets.only(left: 20, right: 20),
-                                      child: Card(
-                                          child: SizedBox(
+                                                ],
+                                              ),
+                                            )));
+                                      })
+                                ],
+                              ))
+                            : Container(
+                                child: Column(children: [
+                                Text("Rezervované knihy",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 30)),
+                                ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics: ClampingScrollPhysics(),
+                                    itemCount: snapshot.data?.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                          margin: EdgeInsets.only(
+                                              left: 20, right: 20),
+                                          child: Card(
+                                              child: SizedBox(
                                             height: 100,
                                             child: Row(
                                               children: [
@@ -291,14 +308,18 @@ class ProfileState extends State<Profile> {
                                                     margin: EdgeInsets.all(20),
                                                     child: ClipRRect(
                                                       borderRadius:
-                                                      BorderRadius.circular(8.0),
+                                                          BorderRadius.circular(
+                                                              8.0),
                                                       child: Image.network(
                                                         "http://10.0.2.2:8000/boo"
-                                                            "ks/${snapshot.data![index].image}",
-                                                        errorBuilder: (BuildContext
-                                                        context,
-                                                            Object exception,
-                                                            StackTrace? stackTrace) {
+                                                        "ks/${snapshot.data![index].image}",
+                                                        errorBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                Object
+                                                                    exception,
+                                                                StackTrace?
+                                                                    stackTrace) {
                                                           return const Icon(
                                                             Icons.book,
                                                             size: 32.0,
@@ -310,42 +331,40 @@ class ProfileState extends State<Profile> {
                                                   child: Column(children: [
                                                     Container(
                                                         padding:
-                                                        EdgeInsets.only(top: 10),
+                                                            EdgeInsets.only(
+                                                                top: 10),
                                                         height: 50,
                                                         child: Row(
                                                           mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
                                                             // SizedBox(
                                                             //   height:20,
                                                             // ),
                                                             Align(
-                                                              alignment:
-                                                              Alignment.bottomLeft,
-                                                              child: GestureDetector(
+                                                              alignment: Alignment
+                                                                  .bottomLeft,
+                                                              child:
+                                                                  GestureDetector(
                                                                 child: Text(
-                                                                    (snapshot
-                                                                        .data![
-                                                                    index]
-                                                                        .title
-                                                                        .length >
-                                                                        15)
-                                                                        ? smallSentence(
-                                                                        snapshot
+                                                                    (snapshot.data![index].title.length >
+                                                                            15)
+                                                                        ? smallSentence(snapshot
                                                                             .data![
-                                                                        index]
+                                                                                index]
                                                                             .title)
                                                                         : snapshot
-                                                                        .data![
-                                                                    index]
-                                                                        .title,
+                                                                            .data![
+                                                                                index]
+                                                                            .title,
                                                                     style: TextStyle(
-                                                                        fontSize: 20)),
+                                                                        fontSize:
+                                                                            20)),
                                                                 onTap: () {
-                                                                  //showToastx
-                                                                  (snapshot
-                                                                      .data![index]
+                                                                  showToastx(snapshot
+                                                                      .data![
+                                                                          index]
                                                                       .title);
                                                                 },
                                                               ),
@@ -358,7 +377,8 @@ class ProfileState extends State<Profile> {
                                                             ),
                                                             Align(
                                                               alignment:
-                                                              Alignment(1.0, 0.0),
+                                                                  Alignment(
+                                                                      1.0, 0.0),
                                                               child: Text(snapshot
                                                                   .data![index]
                                                                   .release_year),
@@ -367,33 +387,21 @@ class ProfileState extends State<Profile> {
                                                         )),
                                                   ]),
                                                 ),
-
-                                                // Padding(
-                                                //     padding: EdgeInsets.only(bottom: 20),
-                                                //     child: Column(
-                                                //       children: [
-                                                //         Padding(
-                                                //           padding: EdgeInsets.all(5),
-                                                //           //apply padding to all four sides
-                                                //           child: Text("Počet kusov na "
-                                                //               "sklade:${snapshot.data![index].count_available}"),
-                                                //         ),
-                                                //
-                                                //       ],
-                                                //     ))
                                               ],
                                             ),
                                           )));
-                                })])),
-
+                                    })
+                              ])),
                       ])));
-                    }
-                    else {
-                      if(allSetUp){
-                        return Text("AA");
-                      }else{
-                        return Text("loading..");
-                      }
+                    } else {
+                      if (!allSetUp) {}
+                      return Center(
+                          child: Column(children: [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        CircularProgressIndicator()
+                      ]));
                     }
                   }),
             ],
@@ -403,13 +411,13 @@ class ProfileState extends State<Profile> {
     ));
   }
 
-  // showToastx(fullTitle) {
-  //   return Toast.show(
-  //       msg: fullTitle,
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.blue,
-  //       textColor: Colors.white);
-  // }
+  showToastx(fullTitle) {
+    return Fluttertoast.showToast(
+        msg: fullTitle,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white);
+  }
 }

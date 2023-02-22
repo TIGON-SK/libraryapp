@@ -45,9 +45,22 @@ class _HomeState extends State<Home> {
     ),
   ];
   final List<Widget> a = [
-    Container(padding: EdgeInsets.only(top:50),child:Image.network("http://10.0.2.2:8000/books/10000000.webp",width: 170,),),
-    Container(padding: EdgeInsets.only(top:50),child:Image.network("http://10.0.2.2:8000/books/10000000.webp",width: 170,),),
-    Container(padding: EdgeInsets.only(top:50),child:Image.network("http://10.0.2.2:8000/books/10000000.webp",width: 170,),),
+    Container(padding: EdgeInsets.only(top:50),child:Column(children: [
+      Text("Squires Fundamentals of Radiology", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)
+        ,),SizedBox
+        (height:10),Image
+        .network("http://10.0.2.2:8000/books/10000000.webp",width: 170,)
+    ],)),
+    Container(padding: EdgeInsets.only(top:50),child:Column(children: [
+      Text("Big Data", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)
+        ,),SizedBox(height:10),Image
+          .network("http://10.0.2.2:8000/books/10000001.webp",width: 170,)
+    ],)),
+    Container(padding: EdgeInsets.only(top:50),child:Column(children: [
+      Text("Superfreakonomics", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)
+        ,),SizedBox(height:10),Image
+          .network("http://10.0.2.2:8000/books/10000002.webp",width: 170,)
+    ],)),
   ];
 
   @override

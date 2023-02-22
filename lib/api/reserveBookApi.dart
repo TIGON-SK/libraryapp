@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class ReserveBook {
@@ -18,24 +19,24 @@ class ReserveBook {
     );
     if (response.statusCode == 200) {
       if(json.decode(response.body)["book user"]==null){
-        // Fluttertoast.showToast(
-        //     msg: "Nedostatok kníh na sklade",
-        //     toastLength: Toast.LENGTH_SHORT,
-        //     gravity: ToastGravity.BOTTOM,
-        //     timeInSecForIosWeb: 1,
-        //     textColor: Colors.white,
-        //     fontSize: 16.0
-        // );
+        Fluttertoast.showToast(
+            msg: "Nedostatok kníh na sklade",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
         return;
       }
-      // Fluttertoast.showToast(
-      //     msg: "Kniha bola rezervovaná",
-      //     toastLength: Toast.LENGTH_SHORT,
-      //     gravity: ToastGravity.BOTTOM,
-      //     timeInSecForIosWeb: 1,
-      //     textColor: Colors.white,
-      //     fontSize: 16.0
-      // );
+      Fluttertoast.showToast(
+          msg: "Kniha bola rezervovaná",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     } else {
       throw Exception('Failed to load books');
     }

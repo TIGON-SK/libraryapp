@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../api/book_data.dart';
 import '../api/reserveBookApi.dart';
@@ -57,7 +58,6 @@ class booksToExplore extends StatelessWidget {
     return FutureBuilder<List<Book>>(
       future: listOfSelectedBooks,
       builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
-        print("aaaaa");
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
@@ -120,8 +120,8 @@ class booksToExplore extends StatelessWidget {
                                           style: const TextStyle(fontSize: 20)
                                       ),
                                       onTap: () {
-                                       // showToastx(
-                                            //snapshot.data![index].title);
+                                       showToastx(
+                                            snapshot.data![index].title);
                                       },
                                     ),
                                   ),
@@ -197,15 +197,15 @@ class booksToExplore extends StatelessWidget {
     reserveBook.reserve(token);
   }
 
-  // showToastx(fullTitle) {
-  //   return Fluttertoast.showToast(
-  //       msg: fullTitle,
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.blue,
-  //       textColor: Colors.white);
-  // }
+  showToastx(fullTitle) {
+    return Fluttertoast.showToast(
+        msg: fullTitle,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white);
+  }
 
 
 }

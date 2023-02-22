@@ -30,6 +30,7 @@ class ExploreState extends State<Explore> {
       // Do something
     }
   }
+
   String token = "";
   TextEditingController searchController = new TextEditingController();
   Map dataWToken = {};
@@ -44,14 +45,15 @@ class ExploreState extends State<Explore> {
   Widget currentWidget = Container();
   Future<List<Book>>? booksList;
 
-  void loadingReset(){
+  void loadingReset() {
     setState(() {
-      loading=true;
+      loading = true;
     });
   }
+
   Future<List<Book>> setUpBooks(parameter) async {
     BooksApi instance = BooksApi(parameter);
-    if(parameter==""){
+    if (parameter == "") {
       await instance.fetchBooks(dataWToken["obtainedToken"]);
       loading = false;
       return instance.booksFetched;
@@ -60,25 +62,28 @@ class ExploreState extends State<Explore> {
     loading = false;
     return instance.booksFetched;
   }
+
   @override
   void initState() {
     super.initState();
     _isMounted = true;
     try {
       setUpBooks("").then((books) {
-        currentWidget = booksToExplore(
-          Future.value(books),
-          dataWToken["userDataFetched"]["id"],
-          dataWToken["obtainedToken"],
-          books.length,
-        );
-        setState(() {
-          loading = false;
-          started = true;
-        });
+        if (_isMounted) {
+          currentWidget = booksToExplore(
+            Future.value(books),
+            dataWToken["userDataFetched"]["id"],
+            dataWToken["obtainedToken"],
+            books.length,
+          );
+          setState(() {
+            loading = false;
+            started = true;
+          });
+        }
       });
-    } catch (e, stackTrace) {
-      error=true;
+    } catch (e) {
+      error = true;
     }
   }
 
@@ -95,7 +100,7 @@ class ExploreState extends State<Explore> {
                     style: TextStyle(color: Colors.red.withOpacity(0.6))),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromRGBO(2, 180, 215, 1),
+                      backgroundColor: Color.fromRGBO(2, 180, 215, 1),
                     ),
                     onPressed: loadingReset,
                     child: Text('Retry'))
@@ -167,13 +172,4 @@ class ExploreState extends State<Explore> {
     reserveBook.reserve(dataWToken["obtainedToken"]);
   }
 
-  showTitleToast(fullTitle) {
-  //   return Fluttertoast.showToast(
-  //       msg: fullTitle,
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.blue,
-  //       textColor: Colors.white);
-  }
 }

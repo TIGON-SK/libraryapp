@@ -1,7 +1,7 @@
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-//import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:libraryapp/views/welcome.dart';
@@ -20,7 +20,25 @@ bool _validatePass = false;
 Map userDataFetched = {};
 bool canSwitchScreenlogin = false;
 var obtainedToken;
+bool _isChecked = false;
 
+// Save the login data
+Future<void> saveLoginData(String username, String password) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString('username', username);
+  prefs.setString('password', password);
+}
+
+// Retrieve the login data
+Future<Map<String, String>?> getLoginData() async {
+  final prefs = await SharedPreferences.getInstance();
+  final username = prefs.getString('username');
+  final password = prefs.getString('password');
+  if (username != null && password != null) {
+    return {'username': username, 'password': password};
+  }
+  return null;
+}
 Future<void> fetchUserTokenRegister(String email, String password) async {
   final response =
       await http.post(Uri.parse('http://10.0.2.2:8000/api/auth/login'), body: {
@@ -30,7 +48,7 @@ Future<void> fetchUserTokenRegister(String email, String password) async {
   final Map loginInfoParsed = json.decode(response.body);
   if (loginInfoParsed['token'] == null) {
     canSwitchScreenlogin = false;
-    //showToast();
+    showToast();
   } else {
     final userResponse = await http.get(
       Uri.parse('http://10.0.2.2:8000/api/user'),
@@ -46,28 +64,29 @@ Future<void> fetchUserTokenRegister(String email, String password) async {
     } else {
       canSwitchScreenlogin = false;
       WidgetsBinding.instance.addPostFrameCallback((_){
-        //showToast();
+        showToast();
       });
     }
   }
 }
 
-//Future<bool?> showToast() {
-  // return Fluttertoast.showToast(
-  //
-  //     msg: 'Zadaný užívateľ neexistuje',
-  //     toastLength: Toast.LENGTH_SHORT,
-  //     gravity: ToastGravity.BOTTOM,
-  //     timeInSecForIosWeb: 1,
-  //     backgroundColor: Colors.red,
-  //     textColor: Colors.yellow);
-//}
+Future<bool?> showToast() {
+  return Fluttertoast.showToast(
+
+      msg: 'Zadaný užívateľ neexistuje',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.yellow);
+}
 
 class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
     emailController.clear();
+    checkForSavedData();
   }
   @override
   Widget build(BuildContext context) {
@@ -117,6 +136,23 @@ class _LoginState extends State<Login> {
                       hintText: 'He5l0.+'),
                 ),
               ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(width: 10),
+                  // Checkbox(
+                  //   value: _isChecked,
+                  //   onChanged: (bool? value) {
+                  //     saveLoginData(emailController.text.toString(), passwordController.text
+                  //         .toString());
+                  //     setState(() {
+                  //       _isChecked = value!;
+                  //     });
+                  //   },
+                  // ),
+                 // Text('Zapamataj si ma'),
+                ],
+              ),
               Container(
                 height: 50,
                 width: 250,
@@ -149,7 +185,6 @@ class _LoginState extends State<Login> {
                     await fetchUserTokenRegister(
                         emailController.text.toString(),
                         passwordController.text.toString());
-                    //print('${userwtoke} as');
                     // Navigator.of(context)
                     //     .push(MaterialPageRoute(builder: (context) => Home()));
                     if (canSwitchScreenlogin) {
@@ -161,10 +196,12 @@ class _LoginState extends State<Login> {
                     }
 
                   },
+
                   child: Text('Prihlásiť sa', style: TextStyle(fontSize: 22,
                       fontWeight: FontWeight.w600),),
                 ),
               ),
+
               // ),
               SizedBox(
                 height: 130,
@@ -173,5 +210,12 @@ class _LoginState extends State<Login> {
           ),
         ),
         );
+  }
+
+  Future<void> checkForSavedData() async {
+    Map<String, String>? loginData = await getLoginData();
+    //
+    // emailController.value=loginData!['username'] as TextEditingValue;
+    // passwordController.value=loginData!['password'] as TextEditingValue;
   }
 }
