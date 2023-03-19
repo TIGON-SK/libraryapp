@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:libraryapp/views/welcome.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -58,7 +58,6 @@ Future<void> fetchUserTokenRegister(String email, String password) async {
       canSwitchScreenlogin = true;
       obtainedToken = loginInfoParsed['token'];
       userDataFetched = json.decode(userResponse.body);
-      //var userData=UserWithToken.fromJson(parsedUserResponse);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', loginInfoParsed['token']);
     } else {
@@ -82,15 +81,23 @@ Future<bool?> showToast() {
 }
 
 class _LoginState extends State<Login> {
+  late Box box1;
+  bool fromChecked = false;
   @override
   void initState() {
     super.initState();
     emailController.clear();
-    checkForSavedData();
+    initHive();
+    createOpenBox();
   }
   @override
   Widget build(BuildContext context) {
-    passwordController.clear();
+    if(fromChecked){
+      fromChecked=false;
+    }
+    else{
+      passwordController.clear();
+    }
     return Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -140,17 +147,18 @@ class _LoginState extends State<Login> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(width: 10),
-                  // Checkbox(
-                  //   value: _isChecked,
-                  //   onChanged: (bool? value) {
-                  //     saveLoginData(emailController.text.toString(), passwordController.text
-                  //         .toString());
-                  //     setState(() {
-                  //       _isChecked = value!;
-                  //     });
-                  //   },
-                  // ),
-                 // Text('Zapamataj si ma'),
+                  Checkbox(
+                    value: _isChecked,
+                    onChanged: (bool? value) {
+                      saveLoginData(emailController.text.toString(), passwordController.text
+                          .toString());
+                      setState(() {
+                        _isChecked = value!;
+                        fromChecked=true;
+                      });
+                    },
+                  ),
+                 Text('Zapamataj si ma'),
                 ],
               ),
               Container(
@@ -168,7 +176,7 @@ class _LoginState extends State<Login> {
                         1)),
                     ),
                   onPressed: () async {
-
+                    login();
                     setState(() {
                       if (emailController.text.isEmpty ||
                           !emailController.text.contains("@") ||
@@ -211,11 +219,31 @@ class _LoginState extends State<Login> {
         ),
         );
   }
-
-  Future<void> checkForSavedData() async {
-    Map<String, String>? loginData = await getLoginData();
-    //
-    // emailController.value=loginData!['username'] as TextEditingValue;
-    // passwordController.value=loginData!['password'] as TextEditingValue;
+  void login(){
+    if(_isChecked){
+      box1.put('email', emailController.value.text);
+      box1.put('pass', passwordController.value.text);
+    }
   }
+
+
+  void initHive() async {
+    await Hive.initFlutter();
+  }
+  void getData()async{
+    print(box1.get('email').toString());
+    if(box1.get('email')!=null){
+      emailController.text = box1.get('email');
+
+    }
+    if(box1.get('pass')!=null){
+      passwordController.text = box1.get('pass');
+    }
+  }
+  void createOpenBox()async{
+    await Hive.initFlutter();
+    box1 = await Hive.openBox('logindata');
+    getData();
+  }
+
 }
