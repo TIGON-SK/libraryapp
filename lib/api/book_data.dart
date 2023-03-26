@@ -24,11 +24,13 @@ class Book {
   String image = "";
   String release_year = "";
   String author = "";
+  String reads_count = "";
 
   Book({required this.id, required this.title, required this.count_available,
     required this.about, required this.image, required this
       .release_year,
-      required this.author});
+      required this.author,required this
+        .reads_count,});
 
   factory Book.fromJson(Map<String, dynamic> json) => Book(
     id: json["id"].toString(),
@@ -37,5 +39,6 @@ class Book {
     about: json["about"].toString(),
     image: json["image"].toString(),
     release_year: json["release_year"].toString(),
-    author: "",);
+    author: "",
+    reads_count: json["reads_count"].toString(),);
 }

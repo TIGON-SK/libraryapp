@@ -25,12 +25,6 @@ class ExploreState extends State<Explore> {
     super.dispose();
   }
 
-  void myMethod() {
-    if (_isMounted) {
-      // Do something
-    }
-  }
-
   String token = "";
   TextEditingController searchController = new TextEditingController();
   Map dataWToken = {};

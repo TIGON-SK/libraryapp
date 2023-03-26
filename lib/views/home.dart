@@ -1,15 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:libraryapp/api/getPopular.dart';
+
+import '../api/book_data.dart';
+import '../api/getBooksApi.dart';
 
 class Home extends StatefulWidget {
-  const Home(Map map, {Key? key}) : super(key: key);
+  Map map = {};
+
+  Home(this.map);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Home> createState() => HomeState(map);
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
+  Map dataWToken = {};
+
+  HomeState(this.dataWToken);
+
   final List<Widget> list = [
     Image(
       image: AssetImage('assets/bookImages/bookimg1.jpg'),
@@ -44,24 +54,45 @@ class _HomeState extends State<Home> {
       fit: BoxFit.fill,
     ),
   ];
-  final List<Widget> a = [
-    Container(padding: EdgeInsets.only(top:50),child:Column(children: [
-      Text("Squires Fundamentals of Radiology", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)
-        ,),SizedBox
-        (height:10),Image
-        .network("http://10.0.2.2:8000/books/10000000.webp",width: 170,)
-    ],)),
-    Container(padding: EdgeInsets.only(top:50),child:Column(children: [
-      Text("Big Data", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)
-        ,),SizedBox(height:10),Image
-          .network("http://10.0.2.2:8000/books/10000001.webp",width: 170,)
-    ],)),
-    Container(padding: EdgeInsets.only(top:50),child:Column(children: [
-      Text("Superfreakonomics", style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)
-        ,),SizedBox(height:10),Image
-          .network("http://10.0.2.2:8000/books/10000002.webp",width: 170,)
-    ],)),
-  ];
+  late List<Widget> a = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setUpBooks();
+  }
+
+  void setUpBooks() async {
+    BooksApi instance = BooksApi("");
+    await instance.fetchBooks(dataWToken["obtainedToken"]);
+    getPopular gp = new getPopular(instance.booksFetched);
+    gp.pickBestBooks();
+    List<Widget> newA = [];
+    for (int i = 0; i < gp.topxbooks.length; i++) {
+      newA.add(Container(
+          padding: EdgeInsets.only(top: 50,left: 20,right: 20),
+          child: Column(
+            children: [
+              Text(
+                gp.topxbooks[i].title,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 10),
+              Text("${gp.topxbooks[i].reads_count} prečítaní",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+              ),
+              SizedBox(height: 10),
+              Image.network(
+                "http://10.0.2.2:8000/books/${gp.topxbooks[i].image}",
+                height: 250,
+              )
+            ],
+          )));
+    }
+    setState(() {
+      a = newA;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,12 +123,33 @@ class _HomeState extends State<Home> {
           "Najčítanejšie",
           style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
         )),
+        SizedBox(height: 20,),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
 
-    Column(
-    children:
-    a
-    )
-     ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 100,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          height: 500,
+          child: PageView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: a.length,
+            itemBuilder: (BuildContext context, int index) {
+              return a[index];
+            },
+          ),
+        ),
+
+      ],
     ));
   }
 }

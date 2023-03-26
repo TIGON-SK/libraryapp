@@ -231,7 +231,6 @@ class _LoginState extends State<Login> {
     await Hive.initFlutter();
   }
   void getData()async{
-    print(box1.get('email').toString());
     if(box1.get('email')!=null){
       emailController.text = box1.get('email');
 

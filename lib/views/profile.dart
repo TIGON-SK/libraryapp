@@ -39,9 +39,12 @@ class ProfileState extends State<Profile> {
     super.initState();
     GetReserved gr = GetReserved(map);
     setUp(gr).then((_) {
-      setState(() {
-        allSetUp = true;
-      });
+      if(mounted){
+        setState(() {
+          allSetUp = true;
+        });
+      }
+
     });
   }
 
