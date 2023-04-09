@@ -183,105 +183,112 @@ class ProfileState extends State<Profile> {
                                       itemCount: snapshot.data?.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
-                                        return Container(
-                                            margin: EdgeInsets.only(
-                                                left: 20, right: 20),
-                                            child: Card(
-                                                child: SizedBox(
-                                              height: 100,
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                      width: 70,
-                                                      margin:
-                                                          EdgeInsets.all(20),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                        child: Image.network(
-                                                          "http://10.0.2.2:8000/boo"
-                                                          "ks/${snapshot.data![index].image}",
-                                                          errorBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  Object
+                                            return Container(
+                                                margin: EdgeInsets.only(
+                                                    left: 20, right: 20),
+                                                child: Card(
+                                                    child: SizedBox(
+                                                      height: 150,
+                                                      child: Row(
+
+                                                        children: [
+                                                          Container(
+                                                              width: 70,
+                                                              margin: EdgeInsets.all(20),
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                BorderRadius.circular(
+                                                                    10),
+                                                                child: Image.network(
+                                                                  "http://10.0.2.2:8000/boo"
+                                                                      "ks/${snapshot.data![index].image}",
+
+                                                                  errorBuilder:
+                                                                      (BuildContext
+                                                                  context,
+                                                                      Object
                                                                       exception,
-                                                                  StackTrace?
+                                                                      StackTrace?
                                                                       stackTrace) {
-                                                            return const Icon(
-                                                              Icons.book,
-                                                              size: 32.0,
-                                                            );
-                                                          },
-                                                        ),
-                                                      )),
-                                                  IntrinsicWidth(
-                                                    child: Column(children: [
-                                                      Container(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  top: 10),
-                                                          height: 50,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              // SizedBox(
-                                                              //   height:20,
-                                                              // ),
-                                                              Align(
-                                                                alignment: Alignment
-                                                                    .bottomLeft,
-                                                                child:
-                                                                    GestureDetector(
-                                                                  child: Text(
-                                                                      (snapshot.data![index].title.length >
-                                                                              15)
-                                                                          ? smallSentence(snapshot
-                                                                              .data![
-                                                                                  index]
-                                                                              .title)
-                                                                          : snapshot
-                                                                              .data![
-                                                                                  index]
-                                                                              .title,
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              20)),
-                                                                  onTap: () {
-                                                                    showToastx(snapshot
-                                                                        .data![
-                                                                            index]
-                                                                        .title);
+                                                                    return const Icon(
+                                                                      Icons.book,
+                                                                      size: 32.0,
+                                                                    );
                                                                   },
                                                                 ),
-                                                              ),
-                                                              // SizedBox(
-                                                              //   height:10,
-                                                              // ),
-                                                              SizedBox(
-                                                                width: 20,
-                                                              ),
-                                                              Align(
-                                                                alignment:
-                                                                    Alignment(
-                                                                        1.0,
-                                                                        0.0),
-                                                                child: Text(snapshot
-                                                                    .data![
+                                                              )),
+                                                          IntrinsicWidth(
+                                                            child:
+                                                            SizedBox(
+                                                              width: 230,
+                                                              child:Column
+                                                              (children: [
+                                                              SizedBox(height: 20,),
+                                                              Row( mainAxisAlignment:
+                                                              MainAxisAlignment.spaceBetween,children: [
+                                                                // SizedBox(
+                                                                //   height:20,
+                                                                // ),
+                                                                Align(
+                                                                  alignment: Alignment
+                                                                      .bottomLeft,
+                                                                  child:
+                                                                  GestureDetector(
+                                                                    child: Text(
+                                                                        (snapshot.data![index].title.length >
+                                                                            15)
+                                                                            ? smallSentence(snapshot
+                                                                            .data![
                                                                         index]
-                                                                    .release_year),
-                                                              ),
-                                                            ],
-                                                          )),
-                                                    ]),
-                                                  ),
+                                                                            .title)
+                                                                            : snapshot
+                                                                            .data![
+                                                                        index]
+                                                                            .title,
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                            20)),
+                                                                    onTap: () {
+                                                                      showToastx(snapshot
+                                                                          .data![
+                                                                      index]
+                                                                          .title);
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                                // SizedBox(
+                                                                //   height:10,
+                                                                // ),
 
-                                                ],
-                                              ),
-                                            )));
+                                                                Align(
+                                                                  alignment:
+                                                                  Alignment(
+                                                                      1.0, 0.0),
+                                                                  child: Text(snapshot
+                                                                      .data![index]
+                                                                      .release_year),
+                                                                ),
+                                                              ],),
+                                                              SizedBox(height: 10,),
+                                                              Row(children: [Text
+                                                                (trimTosmallerText(snapshot
+                                                                  .data![index]
+                                                                  .last_notification)==null?"Žiadna notifikácia pre túto knihu.":trimTosmallerText(snapshot
+                                                                  .data![index]
+                                                                  .last_notification),
+                                                                style: TextStyle(color:
+                                                                Color.fromRGBO(255, 109,
+                                                                    4, 1),fontWeight:
+                                                                FontWeight.bold),)
+                                                                ,],)
+
+
+                                                            ]),)
+
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )));
                                       })
                                 ],
                               ))
@@ -303,7 +310,7 @@ class ProfileState extends State<Profile> {
                                               left: 20, right: 20),
                                           child: Card(
                                               child: SizedBox(
-                                            height: 100,
+                                            height: 150,
                                             child: Row(
                                               children: [
                                                 Container(
@@ -312,10 +319,11 @@ class ProfileState extends State<Profile> {
                                                     child: ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              8.0),
+                                                              10),
                                                       child: Image.network(
                                                         "http://10.0.2.2:8000/boo"
                                                         "ks/${snapshot.data![index].image}",
+
                                                         errorBuilder:
                                                             (BuildContext
                                                                     context,
@@ -331,64 +339,73 @@ class ProfileState extends State<Profile> {
                                                       ),
                                                     )),
                                                 IntrinsicWidth(
-                                                  child: Column(children: [
-                                                    Container(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                top: 10),
-                                                        height: 50,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            // SizedBox(
-                                                            //   height:20,
-                                                            // ),
-                                                            Align(
-                                                              alignment: Alignment
-                                                                  .bottomLeft,
-                                                              child:
-                                                                  GestureDetector(
-                                                                child: Text(
-                                                                    (snapshot.data![index].title.length >
-                                                                            15)
-                                                                        ? smallSentence(snapshot
-                                                                            .data![
-                                                                                index]
-                                                                            .title)
-                                                                        : snapshot
-                                                                            .data![
-                                                                                index]
-                                                                            .title,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            20)),
-                                                                onTap: () {
-                                                                  showToastx(snapshot
+                                                  child: SizedBox(
+                                                    width: 230,
+                                                    child:Column(children: [
+                                                      SizedBox(height: 20,),
+                                                      Row( mainAxisAlignment:
+                                                      MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          // SizedBox(
+                                                          //   height:20,
+                                                          // ),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomLeft,
+                                                            child:
+                                                            GestureDetector(
+                                                              child: Text(
+                                                                  (snapshot.data![index].title.length >
+                                                                      15)
+                                                                      ? smallSentence(snapshot
                                                                       .data![
-                                                                          index]
-                                                                      .title);
-                                                                },
-                                                              ),
+                                                                  index]
+                                                                      .title)
+                                                                      : snapshot
+                                                                      .data![
+                                                                  index]
+                                                                      .title,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                      20)),
+                                                              onTap: () {
+                                                                showToastx(snapshot
+                                                                    .data![
+                                                                index]
+                                                                    .title);
+                                                              },
                                                             ),
-                                                            // SizedBox(
-                                                            //   height:10,
-                                                            // ),
-                                                            SizedBox(
-                                                              width: 20,
-                                                            ),
-                                                            Align(
-                                                              alignment:
-                                                                  Alignment(
-                                                                      1.0, 0.0),
-                                                              child: Text(snapshot
-                                                                  .data![index]
-                                                                  .release_year),
-                                                            ),
-                                                          ],
-                                                        )),
-                                                  ]),
+                                                          ),
+                                                          // SizedBox(
+                                                          //   height:10,
+                                                          // ),
+
+                                                          Align(
+                                                            alignment:
+                                                            Alignment(
+                                                                1.0, 0.0),
+                                                            child: Text(snapshot
+                                                                .data![index]
+                                                                .release_year),
+                                                          ),
+                                                        ],),
+                                                      SizedBox(height: 10,),
+                                                      Row(children: [Text
+                                                        (trimTosmallerText(snapshot
+                                                          .data![index]
+                                                          .last_notification)=='null'?"Žiadna notifikácia pre túto knihu.":trimTosmallerText(snapshot
+                                                          .data![index]
+                                                          .last_notification),
+                                                        style: TextStyle(color:
+                                                        Color.fromRGBO(255, 109,
+                                                            4, 1),fontWeight:
+                                                        FontWeight.bold),)
+                                                        ,],)
+
+
+                                                    ]),
+                                                  )
+
                                                 ),
                                               ],
                                             ),
@@ -413,7 +430,35 @@ class ProfileState extends State<Profile> {
       ),
     ));
   }
+  String trimTosmallerText(String text) {
+    String s = "";
+    int fakeLength = 0;
+    int maxCharactersPerCard = 23;
+    int lastPosition=0;
+    List<String> words = [];
+    for(var i=0;i<text.length;i++){
+      if(text[i]==" "){
+        words.add(text.substring(lastPosition,i));
+        lastPosition=i;
+      }
 
+    }
+    words.add(text.substring(lastPosition,text.length));
+    //make words fit into card
+    for(var i=0;i<words.length;i++){
+      if(fakeLength>=maxCharactersPerCard){
+        fakeLength=0;
+       s+="\n";
+        s += words[i].trim();
+        fakeLength+=words[i].length;
+      }
+      else {
+          s += words[i];
+          fakeLength += words[i].length;
+      }
+    }
+    return s;
+  }
   showToastx(fullTitle) {
     return Fluttertoast.showToast(
         msg: fullTitle,

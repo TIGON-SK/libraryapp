@@ -3,19 +3,22 @@ class BookUser {
   final String user_id;
   final String book_id;
   final String type;
+  final String last_notification;
 
   const BookUser({
     required this.id,
     required this.user_id,
     required this.book_id,
     required this.type,
+    required this.last_notification,
   });
 
   factory BookUser.fromJson(Map<String, dynamic> json) => BookUser(
       id: json["id"].toString(),
       user_id: json["user_id"].toString(),
       book_id: json["book_id"].toString(),
-      type: json["type"].toString());
+      type: json["type"].toString(),
+      last_notification: json["last_notification"].toString());
 }
 
 class BookUsers {

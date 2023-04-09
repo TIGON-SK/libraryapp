@@ -85,6 +85,18 @@ class HomeState extends State<Home> {
               Image.network(
                 "http://10.0.2.2:8000/books/${gp.topxbooks[i].image}",
                 height: 250,
+                errorBuilder:
+                    (BuildContext
+                context,
+                    Object
+                    exception,
+                    StackTrace?
+                    stackTrace) {
+                  return const Icon(
+                    Icons.book,
+                    size: 32.0,
+                  );
+                },
               )
             ],
           )));

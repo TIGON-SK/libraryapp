@@ -17,7 +17,8 @@ class getPopular {
         image: "",
         release_year: "",
         author: "",
-        reads_count: "");
+        reads_count: "",
+        last_notification: '');
     int maxReads = 0;
     for (var i = 0; i < allBooks.length; i++) {
       if (int.parse(allBooks[i].reads_count) > maxReads) {

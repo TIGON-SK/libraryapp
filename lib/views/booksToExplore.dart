@@ -36,23 +36,39 @@ class booksToExplore extends StatelessWidget {
     }
 
     String trimTosmallerText(String text) {
-      final length = text.length;
-      int step = 30;
-      int lastStep = 0;
-      final numOfLines = 3;
-      if (length <= step) {
-        return text;
-      }
-      final buffer = StringBuffer();
-      for (int i = 0; i < numOfLines; i++) {
-
-        final line = text.substring(lastStep, (lastStep+step));
-        lastStep+=step;
-        (i+1==numOfLines)?buffer.write('${line.substring(0,line.length-4)}...')
-            :buffer.write('$line\n');
+      String s = "";
+      int fakeLength = 0;
+      int maxCharactersPerCard = 23;
+      int lastPosition=0;
+      int numOfLines = 0;
+      List<String> words = [];
+      for(var i=0;i<text.length;i++){
+        if(text[i]==" "){
+          words.add(text.substring(lastPosition,i));
+          lastPosition=i;
+        }
 
       }
-      return buffer.toString();
+      words.add(text.substring(lastPosition,text.length));
+      //make words fit into card
+      for(var i=0;i<words.length;i++){
+        if(fakeLength>=maxCharactersPerCard){
+          fakeLength=0;
+          s+="\n";
+          numOfLines++;
+          s += words[i].trim();
+          fakeLength+=words[i].length;
+        }
+        else if(numOfLines>=2){
+          s+="...";
+          break;
+        }
+        else {
+          s += words[i];
+          fakeLength += words[i].length;
+        }
+      }
+      return s;
     }
 
     return FutureBuilder<List<Book>>(
@@ -169,8 +185,17 @@ class booksToExplore extends StatelessWidget {
                                         primary: Color.fromRGBO(2, 180, 215, 1),
                                       ),
                                       onPressed: () {
-                                        apiRequest(int.parse(
-                                            snapshot.data![index].id));
+                                        print(snapshot.data![index]
+                                            .count_available);
+                                        if(snapshot.data![index]
+                                            .count_available=='0'){
+                                          showToastx("Momentálne nemáme danú "
+                                              "knihu na sklade.");
+                                        }
+                                        else{
+                                          apiRequest(int.parse(
+                                              snapshot.data![index].id));
+                                        }
                                       },
                                     )
                                   ],

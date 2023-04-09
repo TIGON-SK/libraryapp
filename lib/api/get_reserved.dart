@@ -24,20 +24,28 @@ class GetReserved {
     await getAllBooks();
     await getAllBookUsers();
     List<int> ids = [];
+    List<Book> books = [];
     for (var i = 0; i < lbu.length; i++) {
       if ((lbu[i].user_id.toString() ==
           map["userDataFetched"]["id"].toString()) && lbu[i].type==state) {
-        ids.add(int.parse(lbu[i].book_id));
-      }
-    }
-    List<Book> books = [];
-    for (var i = 0; i < lb.length; i++) {
-      for (var j = 0; j < ids.length; j++) {
-        if (lb[i].id.toString() == ids[j].toString()) {
-          books.add(lb[i]);
+        for (var j = 0; j < lb.length; j++) {
+          if (lb[j].id.toString() == lbu[i].book_id.toString()) {
+            lb[j].last_notification=lbu[i].last_notification;
+            print(lbu[i].last_notification);
+            books.add(lb[j]);
+          }
         }
+        //ids.add(int.parse(lbu[i].book_id));
       }
     }
+
+    // for (var i = 0; i < lb.length; i++) {
+    //   for (var j = 0; j < ids.length; j++) {
+    //     if (lb[i].id.toString() == ids[j].toString()) {
+    //       books.add(lb[i]);
+    //     }
+    //   }
+    // }
     return books;
   }
 }
