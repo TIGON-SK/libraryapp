@@ -5,16 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../api/book_data.dart';
 import '../api/reserveBookApi.dart';
 
-//     return AlertDialog(
-//       title: Text('Popup Window'),
-//       content: Text('This is the content of the popup window.'),
-//       actions: [
-//         TextButton(
-//           child: Text('Close'),
-//           onPressed: () => Navigator.of(context).pop(),
-//         ),
-//       ],
-//     );
+
 
 //showDialog(
 //   context: context,
@@ -157,9 +148,71 @@ class booksToExplore extends StatelessWidget {
                             ),],),
                             SizedBox(height: 10,),
                             Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [Text(
-                                trimTosmallerText(snapshot.data![index].about),
-                              ),],),
+                              children: [
+                                GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        title: Container(
+                                          alignment: Alignment.center,
+                                          child: Text(snapshot.data![index]
+                                              .title, textAlign: TextAlign.center,),
+                                        ),
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              SizedBox(height: 10,),
+                                              Text(
+                                                snapshot.data![index].author,
+                                                style: TextStyle(fontWeight: FontWeight.w500),
+                                              ),
+                                              SizedBox(height: 10,),
+                                              Text(
+                                                snapshot.data![index].release_year,
+                                                style: TextStyle(fontWeight: FontWeight.w500),
+                                              ),
+                                              SizedBox(height: 20,),
+                                              Image.network(
+                                                "http://10.0.2.2:8000/books/${snapshot.data![index].image}",
+                                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                  return const Icon(
+                                                    Icons.book,
+                                                    size: 32.0,
+                                                  );
+                                                },
+                                              ),
+                                              SizedBox(height: 20,),
+                                              Container(
+                                                width: 250,
+                                                child:Text(snapshot
+                                                    .data![index].about,
+                                                    textAlign: TextAlign.justify),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: Text('Zatvoriť'),
+                                            onPressed: () => Navigator.of(context).pop(),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+
+                                },
+                  child: Text(
+                    trimTosmallerText(snapshot.data![index].about),
+                  ),
+                )
+                                ,],),
                             Row(
                               children: [
                                 Text(
