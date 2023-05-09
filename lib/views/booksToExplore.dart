@@ -238,8 +238,6 @@ class booksToExplore extends StatelessWidget {
                                         primary: Color.fromRGBO(2, 180, 215, 1),
                                       ),
                                       onPressed: () {
-                                        print(snapshot.data![index]
-                                            .count_available);
                                         if(snapshot.data![index]
                                             .count_available=='0'){
                                           showToastx("Momentálne nemáme danú "

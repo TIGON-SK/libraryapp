@@ -31,7 +31,6 @@ class BookUsersApi {
 
         success = true;
       } on FormatException catch (e) {
-        print("retrying..");
       }
     }
   }

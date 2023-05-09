@@ -393,7 +393,8 @@ class ProfileState extends State<Profile> {
                                                       Row(children: [Text
                                                         (trimTosmallerText(snapshot
                                                           .data![index]
-                                                          .last_notification)=='null'?"Žiadna notifikácia pre túto knihu.":trimTosmallerText(snapshot
+                                                          .last_notification)
+                                                          =='null'?trimTosmallerText("Máte 3 dní na prevzatie rezervovanej knihy."):trimTosmallerText(snapshot
                                                           .data![index]
                                                           .last_notification),
                                                         style: TextStyle(color:

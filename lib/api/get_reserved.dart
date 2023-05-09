@@ -31,7 +31,6 @@ class GetReserved {
         for (var j = 0; j < lb.length; j++) {
           if (lb[j].id.toString() == lbu[i].book_id.toString()) {
             lb[j].last_notification=lbu[i].last_notification;
-            print(lbu[i].last_notification);
             books.add(lb[j]);
           }
         }

@@ -28,7 +28,6 @@ class getPopular {
       if (i == allBooks.length - 1) {
         for (var j = 0; j < topx; j++) {
           topxbooks.add(currentBook);
-          //print(currentBook.title);
           allBooks.remove(currentBook);
           position++;
           if (position <= topx - 1) {
